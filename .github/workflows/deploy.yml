@@ -1,7 +1,7 @@
 name: Deploy
 on: [push,workflow_dispatch]
 jobs: 
-    greet: 
+    test: 
         runs-on: ubuntu-latest
         steps: 
             - name: "Get code"
@@ -11,4 +11,27 @@ jobs:
               with:
                 node-version: 20
             - name: Print node version
-              run: node -v         
+              run: node -v
+            - name: Install Depandences
+              run: npm ci
+            - name: Run test
+              run: npm run test
+    deploy:
+        needs: test
+        runs-on: ubuntu-latest
+        steps: 
+            - name: "Get code"
+              uses: actions/checkout@v4
+            - name: Install Node 20
+              uses: actions/setup-node@v4        
+              with:
+                node-version: 20
+            - name: Print node version
+              run: node -v
+            - name: Install Depandences
+              run: npm ci
+            - name: Build Project
+              run: npm run build
+            - name: Deploy 
+              run: echo "deploy Successfull"  
+        
